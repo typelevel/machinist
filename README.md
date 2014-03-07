@@ -15,15 +15,15 @@ be called directly, so Scala uses implicit conversions to enrich these
 types with useful operators and methods.
 
 However, these conversions have a cost: they instantiate an implicit
-object which is usually only needed to immediately call another
-method. This indirection is usually not a big deal, but is prohibitive
-in the case of simple methods that may be called millions of times.
+object which is only needed to immediately call another method. This
+indirection is usually not a big deal, but is prohibitive in the case
+of simple methods that may be called millions of times.
 
 Spire's ops macros provide a solution. These macros allow the same
-enrichment to occur without any allocations or indirection beyond that
-required by the type class pattern. These macros can work with most
-common patterns, and are easily extensible. They can also remap
-symbolic operators (e.g. `**`) to text names (e.g. `pow`).
+enrichment to occur without any allocations or additional
+indirection. These macros can work with most common type class
+encodings, and are easily extensible. They can also remap symbolic
+operators (e.g. `**`) to text names (e.g. `pow`).
 
 For a more detailed description, you can read this
 [article](http://typelevel.org/blog/2013/10/13/spires-ops-macros.html)
@@ -34,7 +34,7 @@ at [typelevel.org](http://typelevel.org).
 Here's an example which defines a very minimal typeclass named `Eq[A]`
 with a single method called `eqv`. It is designed to support type-safe
 equals, similar to `scalaz.Equal` or `spire.algebra.Eq`, and it is
-specialized to avoid boxing.
+specialized to avoid boxing primtive values like `Int` or `Double`.
 
 ```scala
 import scala.{specialized => sp}
@@ -94,7 +94,7 @@ type of `rhs` (the "right-hand side" parameter) and the result type.
 3. `spire.ops.SpireOps` automatically knew to connect the `===`
 operator with the `eqv` method, since it has a built-in mapping of
 symbolic operators to names. You can use your own mapping by extending
-`spire.ops.Ops` yourself and implementing `operatorNames`.
+`spire.ops.Ops` and implementing `operatorNames`.
 
 ### Including spire-ops in your project
 
@@ -154,7 +154,6 @@ conversion(lhs)(ev).method(rhs: Bar)
 In both cases, if "method" is a symbolic operator, it may be rewritten
 to a new name if a match is found in `operatorNames`.
 
-
 ### Details & Fiddliness
 
 To see the names Spire provides for symbolic operators, see the
@@ -162,8 +161,9 @@ To see the names Spire provides for symbolic operators, see the
 
 One caveat is that if you want to extend `spire.ops.Ops` yourself to
 create your own name mapping, you must do so in a separate project or
-sub-project from where you will be using the macros. Scala macros must
-be defined in a separate compilation run from where they are applied.
+sub-project from the one where you will be using the macros. Scala
+macros must be defined in a separate compilation run from where they
+are applied.
 
 It's also possible that despite the wide variety of shapes provided by
 `spire.ops.Ops` your shape is not supported. In particular, Spire
