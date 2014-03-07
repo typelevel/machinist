@@ -337,3 +337,5 @@ trait SpireOperatorNames {
     ("$u22C5", "dot")
   )
 }
+
+object SpireOps extends Ops with SpireOperatorNames
