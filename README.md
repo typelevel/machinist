@@ -3,7 +3,7 @@
 > "Generic types and overloaded operators would let a user code up all
 > of these, and in such a way that they would look in all ways just
 > like types that are built in. They would let users grow the Java
-> programming language in a smooth and clean way.
+> programming language in a smooth and clean way."
 >
 > -- Guy Steel, "Growing a Language"
 
