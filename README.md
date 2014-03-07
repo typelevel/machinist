@@ -1,4 +1,4 @@
-ops-## spire
+## spire-ops
 
 > "Generic types and overloaded operators would let a user code up all
 > of these, and in such a way that they would look in all ways just
@@ -63,8 +63,8 @@ object Test {
 }
 ```
 
-If we were to follow how our `test` method was parsed and compiled,
-here's what it would look like:
+Here are some intermediate representations for how the body of the
+`test` method will be compiled:
 
 ```scala
 // our scala code
