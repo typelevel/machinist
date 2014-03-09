@@ -1,4 +1,4 @@
-package spire.ops
+package machinist
 
 import scala.language.higherKinds
 
@@ -155,7 +155,7 @@ trait Ops {
   //
   //   ev0.plus(lhs, ev1.fromInt(1))
   //
-  // In Spire, this let's us use Ring's fromInt method and
+  // In Spire, this lets us use Ring's fromInt method and
   // ConvertableTo's fromDouble (etc.) before applying an
   // op. Eventually, we should generalize the way we choose the
   // lifting method.
@@ -248,14 +248,14 @@ trait Ops {
    * Provide a canonical mapping between "operator names" used in Ops
    * classes and the actual method names used for type classes.
    *
-   * This is an interesting directory of the operators Spire
-   * supports. It's also worth noting that we don't (currently) have
-   * the capacity to dispatch to two different typeclass-method names
-   * for the same operator--typeclasses have to agree to use the same
-   * name for the same operator.
+   * It's worth noting that a particular instance of Ops must always
+   * map a given symbol a single method name. If you want to be able
+   * to map the same symbol to different names in different contexts,
+   * you'll need to create multiple Ops instances and configure them
+   * appropriately.
    *
    * In general "textual" method names should just pass through to the
-   * typeclass... it is probably not wise to provide mappings for them
+   * typeclass--it is probably not wise to provide mappings for them
    * here.
    */
   def findMethodName(c: Context) = {
@@ -274,7 +274,7 @@ trait Ops {
   def operatorNames: Map[String, String]
 }
 
-trait SpireOperatorNames {
+trait DefaultOperatorNames {
 
   val operatorNames = Map(
     // Eq (=== =!=)
@@ -325,4 +325,4 @@ trait SpireOperatorNames {
   )
 }
 
-object SpireOps extends Ops with SpireOperatorNames
+object DefaultOps extends Ops with DefaultOperatorNames

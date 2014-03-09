@@ -1,4 +1,4 @@
-package spire.ops
+package machinist
 
 import scala.language.experimental.macros
 
@@ -20,18 +20,18 @@ object Qux {
   }
 
   implicit class QuxOps1[A](x: A)(implicit ev: Qux[A]) {
-    def +(rhs: A): A = macro SpireOps.binop[A, A]
-    def unary_-(): A = macro SpireOps.unop[A]
-    def ===(rhs: A): Boolean = macro SpireOps.binop[A, Boolean]
-    def *:(lhs: A): A = macro SpireOps.rbinop[A, A]
-    def +(rhs: Int): A = macro SpireOps.binopWithSelfLift[Int, Qux[A], A]
+    def +(rhs: A): A = macro DefaultOps.binop[A, A]
+    def unary_-(): A = macro DefaultOps.unop[A]
+    def ===(rhs: A): Boolean = macro DefaultOps.binop[A, Boolean]
+    def *:(lhs: A): A = macro DefaultOps.rbinop[A, A]
+    def +(rhs: Int): A = macro DefaultOps.binopWithSelfLift[Int, Qux[A], A]
   }
 
   implicit class QuxOps2[A](x: A) {
-    def +(rhs: A)(implicit ev: Qux[A]): A = macro SpireOps.binopWithEv[Qux[A], A, A]
-    def unary_-(implicit ev: Qux[A]): A = macro SpireOps.unopWithEv[Qux[A], A]
-    def ===(rhs: A)(implicit ev: Qux[A]): Boolean = macro SpireOps.binopWithEv[Qux[A], A, Boolean]
-    def *:(lhs: A)(implicit ev: Qux[A]): A = macro SpireOps.rbinopWithEv[Qux[A], A, A]
+    def +(rhs: A)(implicit ev: Qux[A]): A = macro DefaultOps.binopWithEv[Qux[A], A, A]
+    def unary_-(implicit ev: Qux[A]): A = macro DefaultOps.unopWithEv[Qux[A], A]
+    def ===(rhs: A)(implicit ev: Qux[A]): Boolean = macro DefaultOps.binopWithEv[Qux[A], A, Boolean]
+    def *:(lhs: A)(implicit ev: Qux[A]): A = macro DefaultOps.rbinopWithEv[Qux[A], A, A]
   }
 }
 
