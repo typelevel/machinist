@@ -1,4 +1,4 @@
-## spire-ops
+## Machinist
 
 > "Generic types and overloaded operators would let a user code up all
 > of these, and in such a way that they would look in all ways just
@@ -8,11 +8,6 @@
 > -- Guy Steele, "Growing a Language"
 
 ### Overview
-
-(NOTE: *spire-ops* has been renamed to *machinist*. The package name
-and organization will change, almost everything else will remain the
-same. This README will be updated soon to reflect the
-changes. --2014/03/09)
 
 One of the places where type classes incur some unnecessary overhead
 is implicit enrichment. Generic types have very few methods that can
@@ -24,11 +19,14 @@ object which is only needed to immediately call another method. This
 indirection is usually not a big deal, but is prohibitive in the case
 of simple methods that may be called millions of times.
 
-Spire's ops macros provide a solution. These macros allow the same
+Machinist's ops macros provide a solution. These macros allow the same
 enrichment to occur without any allocations or additional
 indirection. These macros can work with most common type class
 encodings, and are easily extensible. They can also remap symbolic
 operators (e.g. `**`) to text names (e.g. `pow`).
+
+Machinist started out as part of the
+[Spire](http://github.com/non/spire) project.
 
 For a more detailed description, you can read this
 [article](http://typelevel.org/blog/2013/10/13/spires-ops-macros.html)
@@ -44,7 +42,7 @@ specialized to avoid boxing primtive values like `Int` or `Double`.
 ```scala
 import scala.{specialized => sp}
 
-import spire.ops.SpireOps
+import machinist.DefaultOps
 
 trait Eq[@sp A] {
   def eqv(lhs: A, rhs: A): Boolean
@@ -56,7 +54,7 @@ object Eq {
   }
 
   implicit class EqOps[A](x: A)(implicit ev: Eq[A]) {
-    def ===(rhs: A): Boolean = macro SpireOps.binop[A, Boolean]
+    def ===(rhs: A): Boolean = macro DefaultOps.binop[A, Boolean]
   }
 }
 
@@ -96,12 +94,12 @@ specifying which methods we want to provide implicit operators for. We
 did have to specify some type information though (in this case, the
 type of `rhs` (the "right-hand side" parameter) and the result type.
 
-3. `spire.ops.SpireOps` automatically knew to connect the `===`
+3. `machinist.DefaultOps` automatically knew to connect the `===`
 operator with the `eqv` method, since it has a built-in mapping of
 symbolic operators to names. You can use your own mapping by extending
-`spire.ops.Ops` and implementing `operatorNames`.
+`machinist.Ops` and implementing `operatorNames`.
 
-### Including spire-ops in your project
+### Including Machinist in your project
 
 To use the macros, you must be using Scala 2.10. If you have an SBT
 project, add the following snippet to your `build.sbt` file:
@@ -109,12 +107,12 @@ project, add the following snippet to your `build.sbt` file:
 ```scala
 resolvers += "bintray/non" at "http://dl.bintray.com/non/maven"
 
-libraryDependencies += "org.spire-math" %% "spire-ops" % "0.1.0"
+libraryDependencies += "org.typelevel" %% "machinist" % "0.2.0"
 ```
 
-### Shapes supported by spire-ops
+### Shapes supported by Machinist
 
-Spire-ops has macros for recognizing and rewriting the following
+Machinist has macros for recognizing and rewriting the following
 shapes:
 
 ```scala
@@ -143,8 +141,8 @@ conversion(rhs).method(lhs)(ev)
   -> ev.method(lhs, rsh)
 ```
 
-Spire-ops also supports the following oddball cases, which may only be
-useful for Spire itself:
+Machinist also supports the following oddball cases (which may only be
+useful for Spire):
 
 ```scala
 // binopWithLift
@@ -161,19 +159,19 @@ to a new name if a match is found in `operatorNames`.
 
 ### Details & Fiddliness
 
-To see the names Spire provides for symbolic operators, see the
-`SpireOperatorNames` trait.
+To see the names Machinist provides for symbolic operators, see the
+`DefaultOperatorNames` trait.
 
-One caveat is that if you want to extend `spire.ops.Ops` yourself to
+One caveat is that if you want to extend `machinist.Ops` yourself to
 create your own name mapping, you must do so in a separate project or
 sub-project from the one where you will be using the macros. Scala
 macros must be defined in a separate compilation run from where they
 are applied.
 
 It's also possible that despite the wide variety of shapes provided by
-`spire.ops.Ops` your shape is not supported. In particular, Spire
-itself only uses unary and binary operators, meaning that if your
-method takes 3+ parameters you will need to write your own macro.
+`machinist.Ops` your shape is not supported. Machinist only provides
+unary and binary operators, meaning that if your method takes 3+
+parameters you will need to write your own macro.
 
 It should be relatively easy to extend `Ops` to support these cases,
 but that work hasn't been done yet. Pull requests will be gladly

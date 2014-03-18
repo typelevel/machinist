@@ -2,14 +2,17 @@ name := "machinist"
 
 organization := "org.typelevel"
 
-version := "0.2.0"
+version := "0.2.1"
 
 scalaVersion := "2.10.3"
 
 seq(bintrayResolverSettings: _*)
 
-libraryDependencies <++= (scalaVersion) {
-  v => Seq("org.scala-lang" % "scala-compiler" % v % "provided")
+libraryDependencies <++= (scalaVersion) { v =>
+  Seq(
+    "org.scala-lang" % "scala-compiler" % v % "provided",
+    "org.scala-lang" % "scala-reflect" % v
+  )
 }
 
 scalacOptions ++= Seq(
