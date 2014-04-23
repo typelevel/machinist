@@ -101,13 +101,13 @@ symbolic operators to names. You can use your own mapping by extending
 
 ### Including Machinist in your project
 
-To use the macros, you must be using Scala 2.10. If you have an SBT
-project, add the following snippet to your `build.sbt` file:
+To use the macros, you must be using Scala 2.10 or higher. If you have
+an SBT project, add the following snippet to your `build.sbt` file:
 
 ```scala
 resolvers += "bintray/non" at "http://dl.bintray.com/non/maven"
 
-libraryDependencies += "org.typelevel" %% "machinist" % "0.2.0"
+libraryDependencies += "org.typelevel" %% "machinist" % "0.2.2"
 ```
 
 ### Shapes supported by Machinist
