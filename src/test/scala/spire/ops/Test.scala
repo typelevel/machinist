@@ -10,8 +10,12 @@ trait Qux[A] {
   def fromInt(n: Int): A
 }
 
+trait Dux[A] {
+  def scalar: Qux[A]
+}
+
 object Qux {
-  implicit val int = new Qux[Int] {
+  implicit val quxint = new Qux[Int] {
     def plus(lhs: Int, rhs: Int): Int = lhs + rhs
     def negate(lhs: Int): Int = -lhs
     def eqv(lhs: Int, rhs: Int): Boolean = lhs == rhs
@@ -19,12 +23,20 @@ object Qux {
     def fromInt(n: Int): Int = n
   }
 
-  implicit class QuxOps1[A](x: A)(implicit ev: Qux[A]) {
+  implicit val duxint = new Dux[Int] {
+    val scalar = quxint
+  }
+
+  implicit class QuxOps1[A: Qux](x: A) {
     def +(rhs: A): A = macro DefaultOps.binop[A, A]
     def unary_-(): A = macro DefaultOps.unop[A]
     def ===(rhs: A): Boolean = macro DefaultOps.binop[A, Boolean]
     def *:(lhs: A): A = macro DefaultOps.rbinop[A, A]
     def +(rhs: Int): A = macro DefaultOps.binopWithSelfLift[Int, Qux[A], A]
+  }
+
+  implicit class DuxOps[A: Dux](x: A)(implicit ev: Qux[A]) {
+    def +(rhs: A): A = macro DefaultOps.binopWithScalar[A, A]
   }
 
   implicit class QuxOps2[A](x: A) {

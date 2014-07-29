@@ -99,6 +99,41 @@ trait Ops {
     c.Expr[R](Apply(Select(ev, findMethodName(c)), List(lhs.tree, rhs)))
   }
 
+  def unopWithScalar[R](c: Context)(): c.Expr[R] =
+    handleUnopWithChild[R](c)("scalar")
+
+  def handleUnopWithChild[R](c: Context)(childName: String): c.Expr[R] = {
+    import c.universe._
+    val (ev, lhs) = unpack(c)
+    val child = Select(ev, newTermName(childName))
+    c.Expr[R](Apply(Select(child, findMethodName(c)), List(lhs)))
+  }
+
+  // Like binop, but where the implemntation comes from a child member
+  //
+  // If we see code like:
+  //
+  //   lhs * rhs
+  //
+  // After typing and implicit resolution, we get trees like:
+  //
+  //   conversion(lhs)(ev).$times(rhs)
+  //
+  // The macro should produce trees like:
+  //
+  //   ev.scalar.times(lhs, rhs)
+  //
+  def binopWithScalar[A, R](c: Context)(rhs: c.Expr[A]): c.Expr[R] =
+    handleBinopWithChild(c)(rhs)("scalar")
+
+  // provided to make definining things like binopWithScalar easier.
+  def handleBinopWithChild[A, R](c: Context)(rhs: c.Expr[A])(childName: String): c.Expr[R] = {
+    import c.universe._
+    val (ev, lhs) = unpack(c)
+    val child = Select(ev, newTermName(childName))
+    c.Expr[R](Apply(Select(child, findMethodName(c)), List(lhs, rhs.tree)))
+  }
+
   // Like binop, but with ev provided to the method instead of to the
   // implicit constructor.
   //
@@ -281,7 +316,7 @@ trait DefaultOperatorNames {
     ("$eq$eq$eq", "eqv"),
     ("$eq$bang$eq", "neqv"),
 
-    // Order (> >= < <=)
+    // PartialOrder (> >= < <=)
     ("$greater", "gt"),
     ("$greater$eq", "gteqv"),
     ("$less", "lt"),
@@ -321,7 +356,20 @@ trait DefaultOperatorNames {
     ("$times$colon", "timesl"),
     ("$colon$times", "timesr"),
     ("$colon$div", "divr"),
-    ("$u22C5", "dot")
+    ("$u22C5", "dot"),
+
+    // GroupAction (|+|> <|+| +> <+ *> <*)
+    ("$bar$plus$bar$greater", "actl"),
+    ("$less$bar$plus$bar", "actr"),
+    ("$plus$greater", "gplusl"),
+    ("$less$plus", "gplusr"),
+    ("$times$greater", "gtimesl"),
+    ("$less$times", "gtimesr"),
+
+    // Torsor (<|-|> <-> </>)
+    ("$less$bar$minus$bar$greater", "pdiff"),
+    ("$less$minus$greater", "pminus"),
+    ("$less$div$greater", "pdiv")
   )
 }
 

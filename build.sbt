@@ -2,11 +2,11 @@ name := "machinist"
 
 organization := "org.typelevel"
 
-version := "0.2.2"
+version := "0.3.0"
 
-scalaVersion := "2.10.4"
+scalaVersion := "2.11.2"
 
-crossScalaVersions := Seq("2.11.0")
+crossScalaVersions := Seq("2.10.4", "2.11.2")
 
 seq(bintrayResolverSettings: _*)
 
