@@ -56,6 +56,27 @@ trait Ops {
     c.Expr[R](Apply(Select(ev.tree, findMethodName(c)), List(lhs)))
   }
 
+  // Like unop and unopWithEv, but there is ev provided by the implicit
+  // constructor, and ev1 provided by the method.
+  //
+  // If we see code like:
+  //
+  //   lhs.isId
+  //
+  // After typing and implicit resolution, we get trees like:
+  //
+  //   conversion(lhs)(ev: Ev).abs(ev1: Ev1): R
+  //
+  // The macro should produce trees like:
+  //
+  //   ev.abs(lhs)(ev1): R
+  //
+  def unopWithEv2[Ev1, R](c: Context)(ev1: c.Expr[Ev1]): c.Expr[R] = {
+    import c.universe._
+    val (ev, lhs) = unpack(c)
+    c.Expr[R](Apply(Apply(Select(ev, findMethodName(c)), List(lhs)), List(ev1.tree)))
+  }
+
   // Given context and an expression, this method rewrites the tree to
   // call the "desired" method with the lhs and rhs parameters. We
   // find the symbol which is applying the macro and use its name to
