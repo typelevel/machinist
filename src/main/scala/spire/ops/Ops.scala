@@ -65,11 +65,11 @@ trait Ops {
   //
   // After typing and implicit resolution, we get trees like:
   //
-  //   conversion(lhs)(ev: Ev).abs(ev1: Ev1): R
+  //   conversion(lhs)(ev: Ev).isId(ev1: Ev1): R
   //
   // The macro should produce trees like:
   //
-  //   ev.abs(lhs)(ev1): R
+  //   ev.isId(lhs)(ev1): R
   //
   def unopWithEv2[Ev1, R](c: Context)(ev1: c.Expr[Ev1]): c.Expr[R] = {
     import c.universe._
