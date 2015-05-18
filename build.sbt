@@ -1,28 +1,43 @@
-name := "machinist"
+name := "machinist root project"
 
-organization := "org.typelevel"
+crossScalaVersions := Seq("2.10.5", "2.11.6")
 
-version := "0.3.1-SNAPSHOT"
-
-scalaVersion := "2.11.2"
-
-crossScalaVersions := Seq("2.10.4", "2.11.2")
-
-seq(bintrayResolverSettings: _*)
-
-libraryDependencies <++= (scalaVersion) { v =>
-  Seq(
-    "org.scala-lang" % "scala-compiler" % v % "provided",
-    "org.scala-lang" % "scala-reflect" % v
+lazy val root = project.in(file(".")).
+  aggregate(machinistJS, machinistJVM).
+  settings(
+      publish := {},
+      publishLocal := {},
+      sources in Compile := Seq(),
+      sources in Test := Seq()
   )
-}
 
-scalacOptions ++= Seq(
-  "-feature",
-  "-deprecation",
-  "-unchecked"
-)
+lazy val machinist = crossProject.
+  crossType(CrossType.Pure).
+  in(file(".")).
+  settings(bintrayResolverSettings ++ bintrayPublishSettings ++ Seq(
+      name := "machinist",
+      organization := "org.typelevel",
+      version := "0.3.1-SNAPSHOT",
+      scalaVersion := "2.11.6",
+      licenses += ("MIT", url("http://opensource.org/licenses/MIT")),
+      scalacOptions ++= Seq(
+        "-feature",
+        "-deprecation",
+        "-unchecked"
+      ),
+      libraryDependencies <++= (scalaVersion) { v =>
+        Seq(
+          "org.scala-lang" % "scala-compiler" % v % "provided",
+          "org.scala-lang" % "scala-reflect" % v
+        )
+      }
+  ):_*).
+  jvmSettings(
+      // Add JVM-specific settings here
+  ).
+  jsSettings(
+      // Add JS-specific settings here
+  )
 
-seq(bintrayPublishSettings: _*)
-
-licenses += ("MIT", url("http://opensource.org/licenses/MIT"))
+lazy val machinistJVM = machinist.jvm
+lazy val machinistJS = machinist.js
