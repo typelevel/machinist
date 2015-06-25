@@ -7,6 +7,7 @@ lazy val root = project.in(file(".")).
   settings(
       publish := {},
       publishLocal := {},
+      publishArtifact := false,
       sources in Compile := Seq(),
       sources in Test := Seq()
   )
@@ -14,7 +15,7 @@ lazy val root = project.in(file(".")).
 lazy val machinist = crossProject.
   crossType(CrossType.Pure).
   in(file(".")).
-  settings(bintrayResolverSettings ++ bintrayPublishSettings ++ Seq(
+  settings(
       name := "machinist",
       organization := "org.typelevel",
       version := "0.3.1-SNAPSHOT",
@@ -31,7 +32,7 @@ lazy val machinist = crossProject.
           "org.scala-lang" % "scala-reflect" % v
         )
       }
-  ):_*).
+  ).
   jvmSettings(
       // Add JVM-specific settings here
   ).
