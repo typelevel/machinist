@@ -105,9 +105,9 @@ To use the macros, you must be using Scala 2.10 or higher. If you have
 an SBT project, add the following snippet to your `build.sbt` file:
 
 ```scala
-resolvers += "bintray/non" at "http://dl.bintray.com/non/maven"
+resolvers += Resolver.sonatypeRepo("releases")
 
-libraryDependencies += "org.typelevel" %% "machinist" % "0.2.2"
+libraryDependencies += "org.spire-math %% "machinist" % "0.4.0"
 ```
 
 ### Shapes supported by Machinist
@@ -183,4 +183,4 @@ All code is available to you under the MIT license, available at
 http://opensource.org/licenses/mit-license.php as well as in the
 COPYING file.
 
-Copyright Erik Osheim and Tom Switzer 2011-2014.
+Copyright Erik Osheim and Tom Switzer 2011-2015.

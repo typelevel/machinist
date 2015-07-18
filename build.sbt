@@ -17,7 +17,7 @@ lazy val machinist = crossProject
   .in(file("."))
   .settings(
     name := "machinist",
-    organization := "org.typelevel",
+    organization := "org.spire-math",
     scalaVersion := "2.11.6",
     licenses += ("MIT", url("http://opensource.org/licenses/MIT")),
     scalacOptions ++= Seq(
