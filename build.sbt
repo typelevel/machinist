@@ -1,52 +1,40 @@
 import ReleaseTransformations._
 
-name := "machinist root project"
+lazy val machinistSettings = Seq(
+  organization := "org.spire-math",
+  licenses += ("MIT", url("http://opensource.org/licenses/MIT")),
+  homepage := Some(url("http://github.com/typelevel/machinist")),
 
-crossScalaVersions := Seq("2.10.5", "2.11.7")
+  scalaVersion := "2.11.7",
+  crossScalaVersions := Seq("2.10.5", "2.11.7"),
 
-lazy val root = project.in(file("."))
-  .aggregate(machinistJS, machinistJVM)
-  .settings(
-    publish := {},
-    publishLocal := {},
-    sources in Compile := Seq(),
-    sources in Test := Seq())
+  scalacOptions ++= Seq(
+    "-feature",
+    "-deprecation",
+    "-unchecked"
+  ),
+  libraryDependencies <++= (scalaVersion) { v =>
+    Seq(
+      "org.scala-lang" % "scala-compiler" % v % "provided",
+      "org.scala-lang" % "scala-reflect" % v
+    )
+  },
 
-lazy val machinist = crossProject
-  .crossType(CrossType.Pure)
-  .in(file("."))
-  .settings(
-    name := "machinist",
-    organization := "org.spire-math",
-    scalaVersion := "2.11.6",
-    licenses += ("MIT", url("http://opensource.org/licenses/MIT")),
-    scalacOptions ++= Seq(
-      "-feature",
-      "-deprecation",
-      "-unchecked"
-    ),
-    libraryDependencies <++= (scalaVersion) { v =>
-      Seq(
-        "org.scala-lang" % "scala-compiler" % v % "provided",
-        "org.scala-lang" % "scala-reflect" % v
-      )
-    },
+  releaseCrossBuild := true,
+  releasePublishArtifactsAction := PgpKeys.publishSigned.value,
+  publishMavenStyle := true,
+  publishArtifact in Test := false,
+  pomIncludeRepository := Function.const(false),
 
-    releaseCrossBuild := true,
-    releasePublishArtifactsAction := PgpKeys.publishSigned.value,
-    publishMavenStyle := true,
-    publishArtifact in Test := false,
-    pomIncludeRepository := Function.const(false),
+  publishTo <<= (version).apply { v =>
+    val nexus = "https://oss.sonatype.org/"
+    if (v.trim.endsWith("SNAPSHOT"))
+      Some("Snapshots" at nexus + "content/repositories/snapshots")
+    else
+      Some("Releases" at nexus + "service/local/staging/deploy/maven2")
+  },
 
-    publishTo <<= (version).apply { v =>
-      val nexus = "https://oss.sonatype.org/"
-      if (v.trim.endsWith("SNAPSHOT"))
-        Some("Snapshots" at nexus + "content/repositories/snapshots")
-      else
-        Some("Releases" at nexus + "service/local/staging/deploy/maven2")
-    },
-
-    pomExtra := (
+  pomExtra := (
     <scm>
       <url>git@github.com:non/jawn.git</url>
       <connection>scm:git:git@github.com:non/jawn.git</connection>
@@ -63,23 +51,40 @@ lazy val machinist = crossProject
         <url>http://github.com/tixxit/</url>
       </developer>
     </developers>
-    ),
+  ),
 
-    releaseProcess := Seq[ReleaseStep](
-      checkSnapshotDependencies,
-      inquireVersions,
-      runClean,
-      runTest,
-      setReleaseVersion,
-      commitReleaseVersion,
-      tagRelease,
-      ReleaseStep(action = Command.process("publishSigned", _)),
-      setNextVersion,
-      commitNextVersion,
-      ReleaseStep(action = Command.process("sonatypeReleaseAll", _)),
-      pushChanges))
-  .jvmSettings( /* Add JVM-specific settings here */)
-  .jsSettings( /* Add JS-specific settings here */)
+  releaseProcess := Seq[ReleaseStep](
+    checkSnapshotDependencies,
+    inquireVersions,
+    runClean,
+    runTest,
+    setReleaseVersion,
+    commitReleaseVersion,
+    tagRelease,
+    ReleaseStep(action = Command.process("publishSigned", _)),
+    setNextVersion,
+    commitNextVersion,
+    ReleaseStep(action = Command.process("sonatypeReleaseAll", _)),
+    pushChanges))
+
+lazy val noPublish = Seq(
+  publish := {},
+  publishLocal := {},
+  publishArtifact := false)
+
+lazy val root = project
+  .in(file("."))
+  .aggregate(machinistJS, machinistJVM)
+  .settings(name := "machinist-root")
+  .settings(machinistSettings: _*)
+  .settings(noPublish: _*)
+
+lazy val machinist = crossProject
+  .crossType(CrossType.Pure)
+  .in(file("."))
+  .settings(name := "machinist")
+  .settings(machinistSettings: _*)
 
 lazy val machinistJVM = machinist.jvm
+
 lazy val machinistJS = machinist.js
