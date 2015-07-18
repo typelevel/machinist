@@ -4,9 +4,9 @@ name := "machinist root project"
 
 crossScalaVersions := Seq("2.10.5", "2.11.7")
 
-lazy val root = project.in(file(".")).
-  aggregate(machinistJS, machinistJVM).
-  settings(
+lazy val root = project.in(file("."))
+  .aggregate(machinistJS, machinistJVM)
+  .settings(
     publish := {},
     publishLocal := {},
     sources in Compile := Seq(),
@@ -30,30 +30,23 @@ lazy val machinist = crossProject
         "org.scala-lang" % "scala-compiler" % v % "provided",
         "org.scala-lang" % "scala-reflect" % v
       )
-    })
-  .settings(publishSettings: _*)
-  .jvmSettings( /* Add JVM-specific settings here */)
-  .jsSettings( /* Add JS-specific settings here */)
+    },
 
-lazy val machinistJVM = machinist.jvm
-lazy val machinistJS = machinist.js
+    releaseCrossBuild := true,
+    releasePublishArtifactsAction := PgpKeys.publishSigned.value,
+    publishMavenStyle := true,
+    publishArtifact in Test := false,
+    pomIncludeRepository := Function.const(false),
 
-lazy val publishSettings = Seq(
-  releaseCrossBuild := true,
-  releasePublishArtifactsAction := PgpKeys.publishSigned.value,
-  publishMavenStyle := true,
-  publishArtifact in Test := false,
-  pomIncludeRepository := Function.const(false),
+    publishTo <<= (version).apply { v =>
+      val nexus = "https://oss.sonatype.org/"
+      if (v.trim.endsWith("SNAPSHOT"))
+        Some("Snapshots" at nexus + "content/repositories/snapshots")
+      else
+        Some("Releases" at nexus + "service/local/staging/deploy/maven2")
+    },
 
-  publishTo <<= (version).apply { v =>
-    val nexus = "https://oss.sonatype.org/"
-    if (v.trim.endsWith("SNAPSHOT"))
-      Some("Snapshots" at nexus + "content/repositories/snapshots")
-    else
-      Some("Releases" at nexus + "service/local/staging/deploy/maven2")
-  },
-
-  pomExtra := (
+    pomExtra := (
     <scm>
       <url>git@github.com:non/jawn.git</url>
       <connection>scm:git:git@github.com:non/jawn.git</connection>
@@ -70,18 +63,23 @@ lazy val publishSettings = Seq(
         <url>http://github.com/tixxit/</url>
       </developer>
     </developers>
-  ),
+    ),
 
-  releaseProcess := Seq[ReleaseStep](
-    checkSnapshotDependencies,
-    inquireVersions,
-    runClean,
-    runTest,
-    setReleaseVersion,
-    commitReleaseVersion,
-    tagRelease,
-    ReleaseStep(action = Command.process("publishSigned", _)),
-    setNextVersion,
-    commitNextVersion,
-    ReleaseStep(action = Command.process("sonatypeReleaseAll", _)),
-    pushChanges))
+    releaseProcess := Seq[ReleaseStep](
+      checkSnapshotDependencies,
+      inquireVersions,
+      runClean,
+      runTest,
+      setReleaseVersion,
+      commitReleaseVersion,
+      tagRelease,
+      ReleaseStep(action = Command.process("publishSigned", _)),
+      setNextVersion,
+      commitNextVersion,
+      ReleaseStep(action = Command.process("sonatypeReleaseAll", _)),
+      pushChanges))
+  .jvmSettings( /* Add JVM-specific settings here */)
+  .jsSettings( /* Add JS-specific settings here */)
+
+lazy val machinistJVM = machinist.jvm
+lazy val machinistJS = machinist.js
