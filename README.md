@@ -110,6 +110,9 @@ resolvers += Resolver.sonatypeRepo("releases")
 libraryDependencies += "org.spire-math %% "machinist" % "0.4.0"
 ```
 
+*(Versions before 0.4.0 used the "org.typelevel" organization instead
+of "org-spire-math")*
+
 ### Shapes supported by Machinist
 
 Machinist has macros for recognizing and rewriting the following
