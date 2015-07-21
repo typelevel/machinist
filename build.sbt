@@ -1,7 +1,7 @@
 import ReleaseTransformations._
 
 lazy val machinistSettings = Seq(
-  organization := "org.spire-math",
+  organization := "org.typelevel",
   licenses += ("MIT", url("http://opensource.org/licenses/MIT")),
   homepage := Some(url("http://github.com/typelevel/machinist")),
 
