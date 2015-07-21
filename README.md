@@ -107,11 +107,8 @@ an SBT project, add the following snippet to your `build.sbt` file:
 ```scala
 resolvers += Resolver.sonatypeRepo("releases")
 
-libraryDependencies += "org.spire-math %% "machinist" % "0.4.0"
+libraryDependencies += "org.typelevel %% "machinist" % "0.4.1"
 ```
-
-*(Versions before 0.4.0 used the "org.typelevel" organization instead
-of "org-spire-math")*
 
 ### Shapes supported by Machinist
 
