@@ -107,7 +107,7 @@ an SBT project, add the following snippet to your `build.sbt` file:
 ```scala
 resolvers += Resolver.sonatypeRepo("releases")
 
-libraryDependencies += "org.typelevel %% "machinist" % "0.4.1"
+libraryDependencies += "org.typelevel" %% "machinist" % "0.4.1"
 ```
 
 ### Shapes supported by Machinist
