@@ -48,6 +48,17 @@ trait Ops {
   }
 
   /**
+   * A variant of [[unop]] which doesn't take an empty parameter list.
+   *
+   * @group macros
+   */
+  def unop0[R](c: Context): c.Expr[R] = {
+    import c.universe._
+    val (ev, lhs) = unpack(c)
+    c.Expr[R](Apply(Select(ev, findMethodName(c)), List(lhs)))
+  }
+
+  /**
    * Like [[unop]], but with ev provided to the method instead of to the
    * implicit constructor.
    *
@@ -169,6 +180,9 @@ trait Ops {
   }
 
   def unopWithScalar[R](c: Context)(): c.Expr[R] =
+    handleUnopWithChild[R](c)("scalar")
+
+  def unopWithScalar0[R](c: Context): c.Expr[R] =
     handleUnopWithChild[R](c)("scalar")
 
   def handleUnopWithChild[R](c: Context)(childName: String): c.Expr[R] = {

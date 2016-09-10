@@ -27,6 +27,10 @@ object Qux {
     val scalar = quxint
   }
 
+  implicit class QuxOps0[A: Qux](x: A) {
+    def negate: A = macro DefaultOps.unop0[A]
+  }
+
   implicit class QuxOps1[A: Qux](x: A) {
     def +(rhs: A): A = macro DefaultOps.binop[A, A]
     def unary_-(): A = macro DefaultOps.unop[A]
@@ -45,6 +49,12 @@ object Qux {
     def ===(rhs: A)(implicit ev: Qux[A]): Boolean = macro DefaultOps.binopWithEv[Qux[A], A, Boolean]
     def *:(lhs: A)(implicit ev: Qux[A]): A = macro DefaultOps.rbinopWithEv[Qux[A], A, A]
   }
+}
+
+object Test0 {
+  import Qux.QuxOps0
+
+  def foo[A: Qux](a: A): A = a.negate
 }
 
 object Test1 {
