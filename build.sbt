@@ -15,25 +15,7 @@ lazy val machinistSettings = Seq(
   ),
 
   libraryDependencies <++= (scalaVersion) { v =>
-    Seq(
-      "org.scala-lang" % "scala-compiler" % v % "provided",
-      "org.scala-lang" % "scala-reflect" % v
-    )
-  },
-
-  addCompilerPlugin("org.scalamacros" %% "paradise" % "2.1.0" cross CrossVersion.full),
-
-  // for scala 2.11+ quasiquotes are provided by scala-reflect
-  // for Scala 2.10, quasiquotes are provided by macro-paradise
-  libraryDependencies ++= {
-    CrossVersion.partialVersion(scalaVersion.value) match {
-      case Some((2, n)) if n >= 11 =>
-        Seq()
-      case Some((2, 10)) =>
-        Seq(
-          compilerPlugin("org.scalamacros" % "paradise" % "2.1.0" cross CrossVersion.full),
-          "org.scalamacros" %% "quasiquotes" % "2.1.0" cross CrossVersion.binary)
-    }
+    Seq("org.scala-lang" % "scala-reflect" % v)
   },
 
   releaseCrossBuild := true,
@@ -52,8 +34,8 @@ lazy val machinistSettings = Seq(
 
   pomExtra := (
     <scm>
-      <url>git@github.com:non/jawn.git</url>
-      <connection>scm:git:git@github.com:non/jawn.git</connection>
+      <url>git@github.com:typelevel/machinist.git</url>
+      <connection>scm:git:git@github.com:typelevel/machinist.git</connection>
     </scm>
     <developers>
       <developer>
