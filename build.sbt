@@ -6,7 +6,7 @@ lazy val machinistSettings = Seq(
   homepage := Some(url("http://github.com/typelevel/machinist")),
 
   scalaVersion := "2.11.8",
-  crossScalaVersions := Seq("2.10.6", "2.11.8", "2.12.0-M5"),
+  crossScalaVersions := Seq("2.10.6", "2.11.8", "2.12.0-RC1"),
 
   scalacOptions ++= Seq(
     "-feature",
@@ -14,9 +14,7 @@ lazy val machinistSettings = Seq(
     "-unchecked"
   ),
 
-  libraryDependencies <++= (scalaVersion) { v =>
-    Seq("org.scala-lang" % "scala-reflect" % v)
-  },
+  libraryDependencies <+= (scalaVersion) { v => "org.scala-lang" % "scala-reflect" % v },
 
   releaseCrossBuild := true,
   releasePublishArtifactsAction := PgpKeys.publishSigned.value,
