@@ -473,8 +473,8 @@ trait DefaultOperatorNames {
     ("$less$eq", "lteqv"),
 
     // Semigroup (|+| |-|)
-    ("$bar$plus$bar", "op"),
-    ("$bar$minus$bar", "opInverse"),
+    ("$bar$plus$bar", "combine"),
+    ("$bar$minus$bar", "remove"),
 
     // Ring (unary_- + - * **)
     ("unary_$minus", "negate"),
