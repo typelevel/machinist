@@ -6,7 +6,7 @@ lazy val machinistSettings = Seq(
   homepage := Some(url("http://github.com/typelevel/machinist")),
 
   scalaVersion := "2.11.8",
-  crossScalaVersions := Seq("2.10.6", "2.11.8", "2.12.0-RC1"),
+  crossScalaVersions := Seq("2.10.6", "2.11.8", "2.12.0-RC2"),
 
   scalacOptions ++= Seq(
     "-feature",
@@ -14,7 +14,7 @@ lazy val machinistSettings = Seq(
     "-unchecked"
   ),
 
-  libraryDependencies <+= (scalaVersion) { v => "org.scala-lang" % "scala-reflect" % v },
+  libraryDependencies += { "org.scala-lang" % "scala-reflect" % scalaVersion.value },
 
   releaseCrossBuild := true,
   releasePublishArtifactsAction := PgpKeys.publishSigned.value,
@@ -22,9 +22,9 @@ lazy val machinistSettings = Seq(
   publishArtifact in Test := false,
   pomIncludeRepository := Function.const(false),
 
-  publishTo <<= (version).apply { v =>
+  publishTo := {
     val nexus = "https://oss.sonatype.org/"
-    if (v.trim.endsWith("SNAPSHOT"))
+    if (version.value.trim.endsWith("SNAPSHOT"))
       Some("Snapshots" at nexus + "content/repositories/snapshots")
     else
       Some("Releases" at nexus + "service/local/staging/deploy/maven2")
