@@ -1,3 +1,4 @@
+import sbtcrossproject.{crossProject, CrossType}
 import ReleaseTransformations._
 
 lazy val machinistSettings = Seq(
@@ -6,7 +7,7 @@ lazy val machinistSettings = Seq(
   homepage := Some(url("http://github.com/typelevel/machinist")),
 
   scalaVersion := "2.11.8",
-  crossScalaVersions := Seq("2.10.6", "2.11.8", "2.12.0", "2.13.0-M1"),
+  crossScalaVersions := Seq("2.10.6", "2.11.11", "2.12.3", "2.13.0-M1"),
 
   scalacOptions ++= Seq(
     "-feature",
@@ -75,7 +76,7 @@ lazy val root = project
   .settings(machinistSettings: _*)
   .settings(noPublish: _*)
 
-lazy val machinist = crossProject
+lazy val machinist = crossProject(JSPlatform, JVMPlatform)
   .crossType(CrossType.Pure)
   .in(file("."))
   .settings(name := "machinist")
