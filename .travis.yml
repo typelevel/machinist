@@ -1,0 +1,29 @@
+sudo: false
+
+language: scala
+
+scala:
+  - 2.10.6
+  - 2.11.11
+  - 2.12.3
+  - 2.13.0-M1
+
+cache:
+  directories:
+    - $HOME/.ivy2/cache
+    - $HOME/.sbt/launchers
+
+jdk:
+  - oraclejdk8
+
+script:
+  - sbt ++$TRAVIS_SCALA_VERSION test
+
+matrix:
+  include:
+    - scala: 2.11.11
+      jdk: oraclejdk8
+      before_install:
+        - curl https://raw.githubusercontent.com/scala-native/scala-native/v0.3.2/bin/travis_setup.sh | bash -
+      script:
+        - sbt ++$TRAVIS_SCALA_VERSION machinistNative/test

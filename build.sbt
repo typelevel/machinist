@@ -73,7 +73,7 @@ lazy val noPublish = Seq(
 
 lazy val root = project
   .in(file("."))
-  .aggregate(machinistJS, machinistJVM, machinistNative)
+  .aggregate(machinistJS, machinistJVM)
   .settings(name := "machinist-root")
   .settings(machinistSettings: _*)
   .settings(noPublish: _*)
