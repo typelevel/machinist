@@ -71,17 +71,23 @@ lazy val noPublish = Seq(
 
 lazy val root = project
   .in(file("."))
-  .aggregate(machinistJS, machinistJVM)
+  .aggregate(machinistJS, machinistJVM, machinistNative)
   .settings(name := "machinist-root")
   .settings(machinistSettings: _*)
   .settings(noPublish: _*)
 
-lazy val machinist = crossProject(JSPlatform, JVMPlatform)
+lazy val machinist = crossProject(JSPlatform, JVMPlatform, NativePlatform)
   .crossType(CrossType.Pure)
   .in(file("."))
   .settings(name := "machinist")
   .settings(machinistSettings: _*)
+  .nativeSettings(
+    scalaVersion := "2.11.11",
+    crossScalaVersions := Seq("2.11.11")
+  )
 
 lazy val machinistJVM = machinist.jvm
 
 lazy val machinistJS = machinist.js
+
+lazy val machinistNative = machinist.native
