@@ -14,7 +14,7 @@ lazy val machinistSettings = Seq(
     "-unchecked"
   ),
 
-  libraryDependencies += { "org.scala-lang" % "scala-reflect" % scalaVersion.value },
+  libraryDependencies += "org.scala-lang" % "scala-reflect" % scalaVersion.value,
 
   releaseCrossBuild := true,
   releasePublishArtifactsAction := PgpKeys.publishSigned.value,
@@ -22,13 +22,7 @@ lazy val machinistSettings = Seq(
   publishArtifact in Test := false,
   pomIncludeRepository := Function.const(false),
 
-  publishTo := {
-    val nexus = "https://oss.sonatype.org/"
-    if (version.value.trim.endsWith("SNAPSHOT"))
-      Some("Snapshots" at nexus + "content/repositories/snapshots")
-    else
-      Some("Releases" at nexus + "service/local/staging/deploy/maven2")
-  },
+  publishTo := Some(if (isSnapshot.value) Opts.resolver.sonatypeSnapshots else Opts.resolver.sonatypeStaging),
 
   pomExtra := (
     <scm>
@@ -60,7 +54,7 @@ lazy val machinistSettings = Seq(
     publishArtifacts,
     setNextVersion,
     commitNextVersion,
-    ReleaseStep(action = Command.process("sonatypeReleaseAll", _)),
+    releaseStepCommand("sonatypeReleaseAll"),
     pushChanges))
 
 lazy val noPublish = Seq(
