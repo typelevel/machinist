@@ -6,7 +6,7 @@ lazy val machinistSettings = Seq(
   homepage := Some(url("http://github.com/typelevel/machinist")),
 
   scalaVersion := "2.12.4",
-  crossScalaVersions := Seq("2.10.6", "2.11.12", "2.12.4", "2.13.0-M2"),
+  crossScalaVersions := Seq("2.10.6", "2.11.12", "2.12.4", "2.13.0-M3"),
 
   scalacOptions ++= Seq(
     "-feature",
