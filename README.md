@@ -101,18 +101,18 @@ symbolic operators to names. You can use your own mapping by extending
 
 ### Including Machinist in your project
 
-Machinist supports Scala 2.10, 2.11, 2.12, and 2.13.0-M2. If you have
+Machinist supports Scala 2.10, 2.11, 2.12, and 2.13.0-M3. If you have
 an SBT project, add the following snippet to your `build.sbt` file:
 
 ```scala
-libraryDependencies += "org.typelevel" %% "machinist" % "0.6.3"
+libraryDependencies += "org.typelevel" %% "machinist" % "0.6.4
 ```
 
 Machinist also supports Scala.js. To use Machinist in your Scala.js
 projects, include the following `build.sbt` snippet:
 
 ```scala
-libraryDependencies += "org.typelevel" %%% "machinist" % "0.6.3"
+libraryDependencies += "org.typelevel" %%% "machinist" % "0.6.4
 ```
 
 ### Shapes supported by Machinist
