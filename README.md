@@ -1,5 +1,7 @@
 ## Machinist
 
+[![Build Status](https://travis-ci.org/typelevel/machinist.svg?branch=master)](https://travis-ci.org/typelevel/machinist)
+
 > "Generic types and overloaded operators would let a user code up all
 > of these, and in such a way that they would look in all ways just
 > like types that are built in. They would let users grow the Java
