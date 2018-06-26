@@ -7,3 +7,18 @@ scala:
 - 2.13.0-M3
 jdk:
 - oraclejdk8
+cache:
+  directories:
+  - $HOME/.ivy2/cache
+  - $HOME/.sbt/launchers
+script:
+- sbt "++ ${TRAVIS_SCALA_VERSION}!" test
+matrix:
+  include:
+  - scala: 2.11.12
+    sudo: required
+    env: SCALA_NATIVE
+    before_install:
+    - curl https://raw.githubusercontent.com/scala-native/scala-native/v0.3.7/scripts/travis_setup.sh | bash -
+    script:
+    - sbt "++ ${TRAVIS_SCALA_VERSION}!" machinistNative/test
