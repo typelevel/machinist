@@ -19,6 +19,6 @@ matrix:
     sudo: required
     env: SCALA_NATIVE
     before_install:
-    - curl https://raw.githubusercontent.com/scala-native/scala-native/v0.3.7/scripts/travis_setup.sh | bash -
+    - curl https://raw.githubusercontent.com/scala-native/scala-native/v0.3.8/scripts/travis_setup.sh | bash -
     script:
     - sbt "++ ${TRAVIS_SCALA_VERSION}!" machinistNative/test
