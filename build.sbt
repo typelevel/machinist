@@ -2,7 +2,7 @@ import sbtcrossproject.{crossProject, CrossType}
 import ReleaseTransformations._
 
 val Scala211 = "2.11.12"
-val Scala212 = "2.12.6"
+val Scala212 = "2.12.8"
 
 lazy val machinistSettings = Seq(
   organization := "org.typelevel",
