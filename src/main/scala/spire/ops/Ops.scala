@@ -2,7 +2,7 @@ package machinist
 
 import scala.language.higherKinds
 
-import scala.reflect.macros.Context
+import scala.reflect.macros.blackbox.Context
 
 /**
  * This trait has some nice methods for working with implicit `Ops`
@@ -188,7 +188,7 @@ trait Ops {
   def handleUnopWithChild[R](c: Context)(childName: String): c.Expr[R] = {
     import c.universe._
     val (ev, lhs) = unpack(c)
-    val child = Select(ev, newTermName(childName))
+    val child = Select(ev, TermName(childName))
     c.Expr[R](Apply(Select(child, findMethodName(c)), List(lhs)))
   }
 
@@ -225,7 +225,7 @@ trait Ops {
   def handleBinopWithChild[A, R](c: Context)(rhs: c.Expr[A])(childName: String): c.Expr[R] = {
     import c.universe._
     val (ev, lhs) = unpack(c)
-    val child = Select(ev, newTermName(childName))
+    val child = Select(ev, TermName(childName))
     c.Expr[R](Apply(Select(child, findMethodName(c)), List(lhs, rhs.tree)))
   }
 
@@ -321,7 +321,7 @@ trait Ops {
     import c.universe._
     val (ev0, lhs) = unpack(c)
     val typeName = weakTypeOf[A].typeSymbol.name
-    val rhs1 = Apply(Select(ev1.tree, newTermName("from" + typeName)), List(rhs.tree))
+    val rhs1 = Apply(Select(ev1.tree, TermName("from" + typeName)), List(rhs.tree))
     c.Expr[R](Apply(Select(ev0, findMethodName(c)), List(lhs, rhs1)))
   }
 
@@ -353,7 +353,7 @@ trait Ops {
     import c.universe._
     val (ev0, lhs) = unpack(c)
     val typeName = weakTypeOf[A].typeSymbol.name
-    val rhs1 = Apply(Select(ev0, newTermName("from" + typeName)), List(rhs.tree))
+    val rhs1 = Apply(Select(ev0, TermName("from" + typeName)), List(rhs.tree))
     c.Expr[R](Apply(Select(ev0, findMethodName(c)), List(lhs, rhs1)))
   }
 
@@ -444,7 +444,7 @@ trait Ops {
   def findMethodName(c: Context) = {
     import c.universe._
     val s = c.macroApplication.symbol.name.toString
-    newTermName(operatorNames.getOrElse(s, s))
+    TermName(operatorNames.getOrElse(s, s))
   }
 
   /**
